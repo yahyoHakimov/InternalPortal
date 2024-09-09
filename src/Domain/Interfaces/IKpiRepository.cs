@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Domain.Interfaces
 {
-    public interface IKpiRepository
+    public interface IKPIRepository
     {
-        Task<IEnumerable<KPI>> GetAllEmployees();
-        Task<KPI> GetEmployeeById(int id);
-        Task AddEmployee(KPI kpi);
-        Task UpdateEmployee(KPI kpi);
-        Task DeleteEmployee(int id);
+        Task<IEnumerable<KPI>> GetKPIsForEmployee(int employeeId);
+        Task AddKPI(KPI kpi);
+        Task UpdateKPI(KPI kpi);
+        Task DeleteKPI(int kpiId);
     }
+
 }
