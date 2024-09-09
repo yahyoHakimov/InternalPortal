@@ -15,7 +15,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Clients\" />
+    <Folder Include="InternalPortalUI\src\views\Requests\" />
+    <Folder Include="InternalPortalUI\src\views\Meetings\" />
+    <Folder Include="InternalPortalUI\src\views\Feedback\" />
+    <Folder Include="InternalPortalUI\src\views\Document\" />
+    <Folder Include="InternalPortalUI\src\views\Attendance\" />
+    <Folder Include="InternalPortalUI\src\views\Profile\" />
+    <Folder Include="InternalPortalUI\src\views\Employee\" />
+    <Folder Include="InternalPortalUI\src\views\Announcement\" />
+    <Folder Include="InternalPortalUI\src\views\KPI\" />
     <Folder Include="Views\" />
   </ItemGroup>
 
