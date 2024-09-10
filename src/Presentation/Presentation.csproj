@@ -15,6 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="InternalPortalUI\src\components\Nav\" />
+    <Folder Include="InternalPortalUI\src\components\Sidebar\" />
+    <Folder Include="InternalPortalUI\src\stores\Auth\" />
+    <Folder Include="InternalPortalUI\src\views\Auth\" />
     <Folder Include="InternalPortalUI\src\views\Requests\" />
     <Folder Include="InternalPortalUI\src\views\Meetings\" />
     <Folder Include="InternalPortalUI\src\views\Feedback\" />
@@ -24,7 +28,6 @@
     <Folder Include="InternalPortalUI\src\views\Employee\" />
     <Folder Include="InternalPortalUI\src\views\Announcement\" />
     <Folder Include="InternalPortalUI\src\views\KPI\" />
-    <Folder Include="Views\" />
   </ItemGroup>
 
   <ItemGroup>

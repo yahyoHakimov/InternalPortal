@@ -59,55 +59,52 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useAppStore } from '@/stores/counter'
-import { useRouter } from 'vue-router'
+    import { ref, onMounted } from 'vue'
+    import { useAppStore } from '@/stores/counter'
+    import { useRouter } from 'vue-router'
 
-const store = useAppStore()
-const router = useRouter()
+    const store = useAppStore()
+    const router = useRouter()
 
-const employees = ref([])
-const showAddEmployeeModal = ref(false)
-const newEmployee = ref({
-  name: '',
-  department: '',
-  role: '',
-})
+    // Employee data is fetched from the store
+    const employees = ref([])
+    const showAddEmployeeModal = ref(false)
+    const newEmployee = ref({
+        name: '',
+        department: '',
+        role: '',
+    })
 
-onMounted(() => {
-  // In a real application, you would fetch this data from an API
-  employees.value = [
-    { id: 1, name: 'John Doe', department: 'IT', role: 'Developer', photo: '/placeholder.svg?height=40&width=40' },
-    { id: 2, name: 'Jane Smith', department: 'HR', role: 'Manager', photo: '/placeholder.svg?height=40&width=40' },
-    { id: 3, name: 'Bob Johnson', department: 'Finance', role: 'Accountant', photo: '/placeholder.svg?height=40&width=40' },
-  ]
-  store.setEmployees(employees.value)
-})
+    // Fetch employees from the store (backend API)
+    onMounted(async () => {
+        await store.fetchItems('employees')
+        employees.value = store.items.employees
+    })
 
-const viewProfile = (id) => {
-  router.push({ name: 'Profile', params: { id } })
-}
+    // Navigate to profile page
+    const viewProfile = (id) => {
+        router.push({ name: 'Profile', params: { id } })
+    }
 
-const editEmployee = (id) => {
-  // Implement edit functionality
-  console.log('Edit employee', id)
-}
+    // Edit employee functionality placeholder
+    const editEmployee = (id) => {
+        console.log('Edit employee', id)
+    }
 
-const deactivateEmployee = (id) => {
-  // Implement deactivate functionality
-  console.log('Deactivate employee', id)
-}
+    // Deactivate employee functionality placeholder
+    const deactivateEmployee = (id) => {
+        console.log('Deactivate employee', id)
+    }
 
-const addEmployee = () => {
-  const newId = employees.value.length + 1
-  const employee = {
-    id: newId,
-    ...newEmployee.value,
-    photo: '/placeholder.svg?height=40&width=40'
-  }
-  employees.value.push(employee)
-  store.setEmployees(employees.value)
-  showAddEmployeeModal.value = false
-  newEmployee.value = { name: '', department: '', role: '' }
-}
+    // Add a new employee to the store and close the modal
+    const addEmployee = async () => {
+        const employee = {
+            ...newEmployee.value,
+            photo: ''
+        }
+        await store.addItem('employees', employee)
+        employees.value = store.items.employees // Update the local state
+        showAddEmployeeModal.value = false
+        newEmployee.value = { name: '', department: '', role: '' }
+    }
 </script>

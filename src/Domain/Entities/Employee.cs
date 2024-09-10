@@ -19,7 +19,7 @@ namespace Domain.Entities
         public string JobTitle { get; set; }
         public DateTime HireDate { get; set; }
 
-        public string ApplicationUserId { get; set; }  // Link to Identity User
+        public int ApplicationUserId { get; set; }  // Link to Identity User
         public ApplicationUser ApplicationUser { get; set; }  // Navigation property
     }
 

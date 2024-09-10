@@ -37,7 +37,8 @@ namespace Infrastructure.Persistence
             modelBuilder.Entity<Employee>()
                 .HasOne(e => e.ApplicationUser)
                 .WithOne()
-                .HasForeignKey<Employee>(e => e.ApplicationUserId);
+                .HasForeignKey<Employee>(e => e.ApplicationUserId)
+                .OnDelete(DeleteBehavior.Restrict); // Add this to prevent cascade delete
 
             // Seed initial roles using IdentityRole<int> (since you are using int for PK)
             modelBuilder.Entity<IdentityRole<int>>().HasData(
