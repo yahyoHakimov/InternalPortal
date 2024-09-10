@@ -11,44 +11,48 @@ import Meetings from '@/views/Meetings/Meetings.vue'
 import Request from '@/views/Requests/Request.vue'
 import LoginPage from '@/views/Auth/Login.vue'
 import RegisterPage from '@/views/Auth/Register.vue'
+import Unauthorized from '@/views/Error/Unauthorized.vue' // Assuming you have an unauthorized page
+
 // Define your routes
 const routes = [
-    { path: '/', component: Dashboard },
-    { path: '/login', component: LoginPage, meta: { requiresAuth: false } },
-    { path: '/register', component: RegisterPage, meta: { requiresAuth: false } },
-    { path: '/employee', component: Employee },
-    { path: '/kpi', component: KPI },
-    { path: '/announcements', component: Announcement },
-    { path: '/profile', component: Profile },
-    { path: '/attendance', component: Attendance },
-    { path: '/documents', component: Documents },
-    { path: '/feedback', component: Feedback },
-    { path: '/meetings', component: Meetings },
-    { path: '/requests', component: Request },
-    { path: '/:pathMatch(.*)*', redirect: '/' }
-
+  { path: '/', component: Dashboard, meta: { requiresAuth: true } },
+  { path: '/login', component: LoginPage, meta: { requiresAuth: false } },
+  { path: '/register', component: RegisterPage, meta: { requiresAuth: false } },
+  { path: '/employee', component: Employee, meta: { requiresAuth: true } },
+  { path: '/kpi', component: KPI, meta: { requiresAuth: true } },
+  { path: '/announcements', component: Announcement, meta: { requiresAuth: true } },
+  { path: '/profile', component: Profile, meta: { requiresAuth: true } },
+  { path: '/attendance', component: Attendance, meta: { requiresAuth: true } },
+  { path: '/documents', component: Documents, meta: { requiresAuth: true } },
+  { path: '/feedback', component: Feedback, meta: { requiresAuth: true } },
+  { path: '/meetings', component: Meetings, meta: { requiresAuth: true } },
+  { path: '/requests', component: Request, meta: { requiresAuth: true } },
+  { path: '/unauthorized', component: Unauthorized }, // Add a page for unauthorized access
+  { path: '/:pathMatch(.*)*', redirect: '/' }
 ]
 
 // Create the router instance
 const router = createRouter({
-    history: createWebHistory(),
-    routes,
+  history: createWebHistory(),
+  routes,
 })
 
+// Navigation guard to handle route protection
 router.beforeEach((to, from, next) => {
-    const loggedIn = localStorage.getItem('authToken');
-    const userRoles = JSON.parse(localStorage.getItem('userRoles')) || [];
-    if (to.meta.requiresAuth && !loggedIn) {
-        return next('/login');
-    }
+  const loggedIn = localStorage.getItem('authToken');
+  const userRoles = JSON.parse(localStorage.getItem('userRoles')) || [];
 
-    if (to.meta.roles && !to.meta.roles.some(role => userRoles.includes(role))) {
-        // If user does not have the required roles for the route, redirect them
-        return next('/unauthorized'); // Redirect to unauthorized page or dashboard
-    }
+  if (to.meta.requiresAuth && !loggedIn) {
+    // Redirect to login if not authenticated
+    return next('/login');
+  }
 
-    next();
+  if (to.meta.roles && !to.meta.roles.some(role => userRoles.includes(role))) {
+    // Redirect to unauthorized page if user doesn't have the required roles
+    return next('/unauthorized');
+  }
+
+  next();
 });
 
-
-export default router
+export default router;

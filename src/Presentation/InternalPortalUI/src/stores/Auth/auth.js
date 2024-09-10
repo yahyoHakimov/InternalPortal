@@ -12,20 +12,21 @@ export const useAuthStore = defineStore('auth', {
         isAuthenticated: (state) => !!state.token,
     },
     actions: {
-        async login(email, password, rememberMe) {
+        async login(email, password) {
             try {
-                const response = await axios.post(`${API_URL}/auth/login`, {
-                    email,
-                    password,
-                    rememberMe
-                })
-                this.token = response.data.token
-                localStorage.setItem('token', this.token)
-                axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
-            } catch (error) {
-                console.error('Login failed:', error)
-                throw error
-            }
+                const response = await axios.post(`${API_URL}`, { email, password });
+                const { token, userRoles } = response.data;
+        
+                this.token = token;
+                localStorage.setItem('authToken', token);
+                localStorage.setItem('userRoles', JSON.stringify(userRoles));
+                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        
+                return true;
+              } catch (error) {
+                console.error('Login failed:', error);
+                return false;
+              }
         },
         async register(email, password) {
             try {
@@ -39,11 +40,12 @@ export const useAuthStore = defineStore('auth', {
             }
         },
         logout() {
-            this.user = null
-            this.token = null
-            localStorage.removeItem('token')
-            delete axios.defaults.headers.common['Authorization']
-        },
+            this.user = null;
+            this.token = null;
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userRoles');
+            delete axios.defaults.headers.common['Authorization'];
+          },
         async checkAuth() {
             const token = localStorage.getItem('token')
             if (token) {
