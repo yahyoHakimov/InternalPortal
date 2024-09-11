@@ -69,7 +69,10 @@
 
     const handleLogin = async () => {
         try {
-            await authStore.login(email.value, password.value, rememberMe.value)
+            const success = await authStore.login(email.value, password.value, router)
+            if (!success) {
+                console.log("Failure in Login page")
+            }
             router.push('/')
         } catch (error) {
             console.error('Login failed:', error)

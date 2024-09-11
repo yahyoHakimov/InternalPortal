@@ -124,14 +124,21 @@ const employee = ref({
 const showEditModal = ref(false)
 const editedEmployee = ref({ ...employee.value })
 
-onMounted(() => {
-  // In a real application, you would fetch the employee data based on the route params
-  const employeeId = parseInt(route.params.id)
-  const foundEmployee = store.employees.find(e => e.id === employeeId)
-  if (foundEmployee) {
-    employee.value = { ...foundEmployee, ...employee.value }
+ onMounted(async () => {
+  await store.fetchItems('employees');  // Ensure employees are fetched
+
+  const employeeId = parseInt(route.params.id);
+  if (store.employees && store.employees.length > 0) {
+    const foundEmployee = store.employees.find(e => e.id === employeeId);
+    if (foundEmployee) {
+      employee.value = { ...foundEmployee, ...employee.value };
+    } else {
+      console.error(`Employee with ID ${employeeId} not found`);
+    }
+  } else {
+    console.error('store.employees is undefined or empty');
   }
-})
+});
 
 const updateProfile = () => {
   employee.value = { ...employee.value, ...editedEmployee.value }

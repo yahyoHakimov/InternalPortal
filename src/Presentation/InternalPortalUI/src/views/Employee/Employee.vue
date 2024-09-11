@@ -5,18 +5,18 @@
         <!-- Employee List -->
         <div class="bg-white shadow overflow-hidden sm:rounded-md mb-6">
             <ul class="divide-y divide-gray-200">
-                <li v-for="employee in employees" :key="employee.id" class="px-6 py-4 flex items-center justify-between">
+                <li v-for="employee in employees" :key="employee.employeeId" class="px-6 py-4 flex items-center justify-between">
                     <div class="flex items-center">
-                        <img class="h-10 w-10 rounded-full mr-4" :src="employee.photo" :alt="employee.name" />
+                        <img class="h-10 w-10 rounded-full mr-4" :src="employee.photo || '/placeholder.svg'" :alt="employee.name" />
                         <div>
-                            <p class="text-sm font-medium text-gray-900">{{ employee.name }}</p>
+                            <p class="text-sm font-medium text-gray-900">{{ employee.firstName }} {{ employee.lastName }}</p>
                             <p class="text-sm text-gray-500">{{ employee.department }} - {{ employee.role }}</p>
                         </div>
                     </div>
                     <div class="flex space-x-2">
-                        <button @click="viewProfile(employee.id)" class="text-blue-600 hover:text-blue-800">View Profile</button>
-                        <button @click="editEmployee(employee.id)" class="text-green-600 hover:text-green-800">Edit</button>
-                        <button @click="deactivateEmployee(employee.id)" class="text-red-600 hover:text-red-800">Deactivate</button>
+                        <button @click="viewProfile(employee.employeeId)" class="text-blue-600 hover:text-blue-800">View Profile</button>
+                        <button @click="editEmployee(employee.employeeId)" class="text-green-600 hover:text-green-800">Edit</button>
+                        <button @click="deactivateEmployee(employee.employeeId)" class="text-red-600 hover:text-red-800">Deactivate</button>
                     </div>
                 </li>
             </ul>
@@ -33,8 +33,12 @@
                 <h3 class="text-lg font-semibold mb-4">Add New Employee</h3>
                 <form @submit.prevent="addEmployee">
                     <div class="mb-4">
-                        <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-                        <input type="text" id="name" v-model="newEmployee.name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
+                        <input type="text" id="firstName" v-model="newEmployee.firstName" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                    </div>
+                    <div class="mb-4">
+                        <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
+                        <input type="text" id="lastName" v-model="newEmployee.lastName" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                     </div>
                     <div class="mb-4">
                         <label for="department" class="block text-sm font-medium text-gray-700">Department</label>
@@ -66,11 +70,11 @@
     const store = useAppStore()
     const router = useRouter()
 
-    // Employee data is fetched from the store
     const employees = ref([])
     const showAddEmployeeModal = ref(false)
     const newEmployee = ref({
-        name: '',
+        firstName: '',
+        lastName: '',
         department: '',
         role: '',
     })
@@ -105,6 +109,6 @@
         await store.addItem('employees', employee)
         employees.value = store.items.employees // Update the local state
         showAddEmployeeModal.value = false
-        newEmployee.value = { name: '', department: '', role: '' }
+        newEmployee.value = { firstName: '', lastName: '', department: '', role: '' }
     }
 </script>
