@@ -1,6 +1,6 @@
 ﻿using Domain.Entities;
-using Domain.Interfaces;
-using Infrastructure.Persistence;
+using Infrastructure.DbConetxt;
+using Infrastructure.Repositories.Interfaces.IEmployeeRepo;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,23 +19,23 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Employee>> GetAllEmployeesAsync()
+        public async Task<IEnumerable<EmployeeModel>> GetAllEmployeesAsync()
         {
             return await _context.Employees.ToListAsync();
         }
 
-        public async Task<Employee> GetEmployeeByIdAsync(int employeeId)
+        public async Task<EmployeeModel> GetEmployeeByIdAsync(int employeeId)
         {
             return await _context.Employees.FindAsync(employeeId);
         }
 
-        public async Task AddEmployeeAsync(Employee employee)
+        public async Task AddEmployeeAsync(EmployeeModel employee)
         {
             await _context.Employees.AddAsync(employee);
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateEmployeeAsync(Employee employee)
+        public async Task UpdateEmployeeAsync(EmployeeModel employee)
         {
             _context.Employees.Update(employee);
             await _context.SaveChangesAsync();

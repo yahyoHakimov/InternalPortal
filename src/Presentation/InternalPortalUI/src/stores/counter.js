@@ -5,7 +5,7 @@ const API_URL = 'https://localhost:7126/api';
 
 export const useAppStore = defineStore('app', {
     state: () => ({
-        user: null,  // Keep if you need user details in the app store
+        user: null,
         notifications: [],
         items: {
             employees: [],
@@ -20,13 +20,8 @@ export const useAppStore = defineStore('app', {
         },
     }),
     actions: {
-        addNotification(notification) {
-            this.notifications.push(notification);
-        },
-
         // Generalized fetch function for any entity type
         async fetchItems(entityType, page = 1, limit = 10) {
-            // Check if entityType exists in items
             if (!this.items.hasOwnProperty(entityType)) {
                 console.error(`Invalid entityType: ${entityType}`);
                 return;

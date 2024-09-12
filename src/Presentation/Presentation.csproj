@@ -9,8 +9,13 @@
   <ItemGroup>
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.3" />
   </ItemGroup>
 
@@ -20,7 +25,6 @@
     <Folder Include="InternalPortalUI\src\stores\Auth\" />
     <Folder Include="InternalPortalUI\src\views\Auth\" />
     <Folder Include="InternalPortalUI\src\views\Requests\" />
-    <Folder Include="InternalPortalUI\src\views\Meetings\" />
     <Folder Include="InternalPortalUI\src\views\Feedback\" />
     <Folder Include="InternalPortalUI\src\views\Document\" />
     <Folder Include="InternalPortalUI\src\views\Attendance\" />
@@ -31,7 +35,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Application\Application.csproj" />
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+    <ProjectReference Include="..\Middleware\Middleware.csproj" />
   </ItemGroup>
 
 </Project>

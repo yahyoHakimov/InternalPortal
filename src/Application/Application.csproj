@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+    <PackageReference Include="Google.Apis.Calendar.v3" Version="1.68.0.3473" />
     <PackageReference Include="MediatR" Version="12.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.1.2" />
@@ -15,6 +17,44 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj" />
+    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\RolePermission\CommandHandlers\" />
+    <Folder Include="Models\RolePermission\Commands\" />
+    <Folder Include="Models\RolePermission\Queries\" />
+    <Folder Include="Models\RolePermission\QueriyHandlers\" />
+    <Folder Include="Models\Request\CommandHandlers\" />
+    <Folder Include="Models\Request\Commands\" />
+    <Folder Include="Models\Request\Queries\" />
+    <Folder Include="Models\Request\QueriyHandlers\" />
+    <Folder Include="Models\Meeting\CommandHandlers\" />
+    <Folder Include="Models\Meeting\Commands\" />
+    <Folder Include="Models\Meeting\Queries\" />
+    <Folder Include="Models\Meeting\QueriyHandlers\" />
+    <Folder Include="Models\Lifecycle\CommandHandlers\" />
+    <Folder Include="Models\Lifecycle\Commands\" />
+    <Folder Include="Models\Lifecycle\Queries\" />
+    <Folder Include="Models\Lifecycle\QueriyHandlers\" />
+    <Folder Include="Models\KPI\CommandHandlers\" />
+    <Folder Include="Models\KPI\Commands\" />
+    <Folder Include="Models\KPI\Queries\" />
+    <Folder Include="Models\KPI\QueriyHandlers\" />
+    <Folder Include="Models\Feedback\CommandHandlers\" />
+    <Folder Include="Models\Feedback\Commands\" />
+    <Folder Include="Models\Feedback\Queries\" />
+    <Folder Include="Models\Feedback\QueriyHandlers\" />
+    <Folder Include="Models\Document\CommandHandlers\" />
+    <Folder Include="Models\Document\Commands\" />
+    <Folder Include="Models\Document\Queries\" />
+    <Folder Include="Models\Document\QueriyHandlers\" />
+    <Folder Include="Models\Attendance\CommandHandlers\" />
+    <Folder Include="Models\Attendance\QueriyHandlers\" />
+    <Folder Include="Models\Attendance\Queries\" />
+    <Folder Include="Models\Attendance\Commands\" />
+    <Folder Include="Requests\Commands\" />
+    <Folder Include="Requests\Queries\" />
   </ItemGroup>
 
 </Project>

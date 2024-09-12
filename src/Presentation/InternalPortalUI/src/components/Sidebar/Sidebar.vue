@@ -50,6 +50,7 @@ const navItems = [
   { icon: FileText, label: 'Documents', route: '/documents' },
   { icon: MessageSquare, label: 'Feedback', route: '/feedback' },
   { icon: Calendar, label: 'Meetings', route: '/meetings' },
+  { icon: Calendar, label: 'Meetings', route: '/meetings1' },
   { icon: Clipboard, label: 'Requests', route: '/requests' },
 ]
 </script>

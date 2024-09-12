@@ -25,12 +25,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Application\Application.csproj" />
     <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
+    <Folder Include="Repositories\Implementation\Feedback\" />
+    <Folder Include="Repositories\Implementation\DocumentRepo\" />
+    <Folder Include="Repositories\Implementation\AttendanceRepo\" />
+    <Folder Include="Repositories\Implementation\RolePermission\" />
+    <Folder Include="Repositories\Implementation\Request\" />
+    <Folder Include="Repositories\Implementation\Meeting\" />
+    <Folder Include="Repositories\Implementation\Lifecycle\" />
+    <Folder Include="Repositories\Implementation\KPI\" />
   </ItemGroup>
 
 </Project>

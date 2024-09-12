@@ -9,10 +9,14 @@ namespace Domain.Interfaces
 {
     public interface IMeetingRepository
     {
-        Task<IEnumerable<Meeting>> GetAllMeetings();
-        Task<Lifecycle> GetMeetingById(int id);
-        Task AddMeeting(Meeting meeting);
-        Task UpdateMeeting(Meeting meeting);
-        Task DeleteMeeting(int id);
+        Task<List<Meeting>> GetAllAsync();
+
+        Task AddMeetAsync(Meeting meeting);
+
+        Task UpdateMeetAsync(Meeting meeting);
+
+        Task<Meeting> GetByIdAsync(Guid meetingId);
+
+        Task DeleteMeetAsync(Guid meetingId);
     }
 }

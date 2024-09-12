@@ -1,7 +1,8 @@
 ﻿using Application.DTOs.Auth;
-using Application.Services.Interface.Auth;
+using Application.Services.Interface.IAuth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Presentation.Controllers
 {
@@ -44,6 +45,13 @@ namespace Presentation.Controllers
             }
 
             return Unauthorized();
+        }
+
+        [HttpGet("me")]
+        public IActionResult GetCurrentUser()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // This will return the authenticated user's ID
+            return Ok(new { userId });
         }
     }
 

@@ -12,6 +12,7 @@ import Request from '@/views/Requests/Request.vue'
 import LoginPage from '@/views/Auth/Login.vue'
 import RegisterPage from '@/views/Auth/Register.vue'
 import Unauthorized from '@/views/Error/Unauthorized.vue'
+import MeetingsCalendarPage from '../views/Meetings/MeetingsCalendarPage.vue'
 
 // Define your routes
 const routes = [
@@ -33,6 +34,7 @@ const routes = [
     { path: '/documents', component: Documents, meta: { requiresAuth: true } },
     { path: '/feedback', component: Feedback, meta: { requiresAuth: true } },
     { path: '/meetings', component: Meetings, meta: { requiresAuth: true } },
+    { path: '/meetings1', component: MeetingsCalendarPage, meta: { requiresAuth: true } },
     { path: '/requests', component: Request, meta: { requiresAuth: true } },
     { path: '/unauthorized', component: Unauthorized },
     { path: '/:pathMatch(.*)*', redirect: '/unauthorized' }  // Catch-all route to unauthorized

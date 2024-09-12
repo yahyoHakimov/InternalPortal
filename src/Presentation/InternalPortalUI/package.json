@@ -13,6 +13,8 @@
   },
   "dependencies": {
     "autoprefixer": "^10.4.20",
+    "axios": "^1.7.7",
+    "gapi-script": "^1.2.0",
     "lucide-vue-next": "^0.439.0",
     "pinia": "^2.0.0-rc.10",
     "postcss": "^8.4.45",

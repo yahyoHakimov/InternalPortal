@@ -9,10 +9,10 @@ namespace Application.Services.Interface.IEmployee
 {
     public interface IEmployeeService
     {
-        Task<IEnumerable<Employee>> GetAllEmployeesAsync();
-        Task<Employee> GetEmployeeByIdAsync(int employeeId);
-        Task AddEmployeeAsync(Employee employee);
-        Task UpdateEmployeeAsync(Employee employee);
+        Task<IEnumerable<EmployeeModel>> GetAllEmployeesAsync();
+        Task<EmployeeModel> GetEmployeeByIdAsync(int employeeId);
+        Task AddEmployeeAsync(EmployeeModel employee);
+        Task UpdateEmployeeAsync(EmployeeModel employee);
         Task DeleteEmployeeAsync(int employeeId);
     }
 }

@@ -9,10 +9,10 @@ namespace Domain.Interfaces
 {
     public interface IAnnouncementRepository
     {
-        Task<IEnumerable<Announcement>> GetAllAnnouncements();
-        Task<Announcement> GetAnnouncementById(int id);
-        Task AddAnnouncement(Announcement announcement);
-        Task UpdateAnnouncement(Announcement announcement);
-        Task DeleteAnnouncement(int id);
+        Task<IEnumerable<Announcement>> GetAllAnnouncementsAsync();
+        Task<Announcement> GetAnnouncementByIdAsync(int id);
+        Task AddAnnouncementAsync(Announcement announcement);
+        Task UpdateAnnouncementAsync(Announcement announcement);
+        Task DeleteAnnouncementAsync(int id);
     }
 }

@@ -7,7 +7,7 @@
             <ul class="divide-y divide-gray-200">
                 <li v-for="employee in employees" :key="employee.employeeId" class="px-6 py-4 flex items-center justify-between">
                     <div class="flex items-center">
-                        <img class="h-10 w-10 rounded-full mr-4" :src="employee.photo || '/placeholder.svg'" :alt="employee.name" />
+                        <img class="h-10 w-10 rounded-full mr-4" :src="employee.photo || '/placeholder.svg'" :alt="employee.firstName + ' ' + employee.lastName" />
                         <div>
                             <p class="text-sm font-medium text-gray-900">{{ employee.firstName }} {{ employee.lastName }}</p>
                             <p class="text-sm text-gray-500">{{ employee.department }} - {{ employee.role }}</p>
@@ -41,12 +41,24 @@
                         <input type="text" id="lastName" v-model="newEmployee.lastName" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                     </div>
                     <div class="mb-4">
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" id="email" v-model="newEmployee.email" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                    </div>
+                    <div class="mb-4">
                         <label for="department" class="block text-sm font-medium text-gray-700">Department</label>
                         <input type="text" id="department" v-model="newEmployee.department" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                     </div>
                     <div class="mb-4">
                         <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
                         <input type="text" id="role" v-model="newEmployee.role" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                    </div>
+                    <div class="mb-4">
+                        <label for="jobTitle" class="block text-sm font-medium text-gray-700">Job Title</label>
+                        <input type="text" id="jobTitle" v-model="newEmployee.jobTitle" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                    </div>
+                    <div class="mb-4">
+                        <label for="hireDate" class="block text-sm font-medium text-gray-700">Hire Date</label>
+                        <input type="date" id="hireDate" v-model="newEmployee.hireDate" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                     </div>
                     <div class="flex justify-end space-x-2">
                         <button type="button" @click="showAddEmployeeModal = false" class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
@@ -75,8 +87,11 @@
     const newEmployee = ref({
         firstName: '',
         lastName: '',
+        email: '',
         department: '',
         role: '',
+        jobTitle: '',
+        hireDate: '',
     })
 
     // Fetch employees from the store (backend API)
@@ -104,11 +119,11 @@
     const addEmployee = async () => {
         const employee = {
             ...newEmployee.value,
-            photo: ''
+            photo: '' // Photo can be added later if necessary
         }
         await store.addItem('employees', employee)
         employees.value = store.items.employees // Update the local state
         showAddEmployeeModal.value = false
-        newEmployee.value = { firstName: '', lastName: '', department: '', role: '' }
+        newEmployee.value = { firstName: '', lastName: '', email: '', department: '', role: '', jobTitle: '', hireDate: '' }
     }
 </script>

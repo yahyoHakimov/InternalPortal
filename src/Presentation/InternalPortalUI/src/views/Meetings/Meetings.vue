@@ -71,36 +71,37 @@
             <div class="bg-white p-8 rounded-md shadow-xl w-full max-w-md">
                 <h3 class="text-lg font-semibold mb-4">Schedule Meeting</h3>
                 <form @submit.prevent="scheduleMeeting">
-                    <div class="mb-4">
-                        <label for="meeting-title" class="block text-sm font-medium text-gray-700">Meeting Title</label>
-                        <input type="text" id="meeting-title" v-model="newMeeting.title" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                    <h2 class="text-2xl font-semibold mb-4">{{ currentStep === 1 ? 'Meeting Details' : 'Meeting Summary' }}</h2>
+
+                    <div v-if="currentStep === 1">
+                        <!-- Meeting Details Form -->
+                        <div class="mb-4">
+                            <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
+                            <input type="text" id="title" v-model="meetingDetails.title" class="block w-full rounded-md border-gray-300" />
+                        </div>
+                        <div class="mb-4">
+                            <label for="date" class="block text-sm font-medium text-gray-700">Date</label>
+                            <input type="date" id="date" v-model="meetingDetails.date" class="block w-full rounded-md border-gray-300" />
+                        </div>
+                        <div class="mb-4">
+                            <label for="duration" class="block text-sm font-medium text-gray-700">Duration</label>
+                            <select id="duration" v-model="meetingDetails.duration" class="block w-full rounded-md border-gray-300">
+                                <option value="15">15 min</option>
+                                <option value="30">30 min</option>
+                                <option value="45">45 min</option>
+                                <option value="60">60 min</option>
+                            </select>
+                        </div>
+                        <button @click="nextStep" class="bg-blue-500 text-white px-4 py-2 rounded-md">Next</button>
                     </div>
-                    <div class="mb-4">
-                        <label for="meeting-date" class="block text-sm font-medium text-gray-700">Date</label>
-                        <input type="date" id="meeting-date" v-model="newMeeting.date" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                    </div>
-                    <div class="mb-4">
-                        <label for="meeting-time" class="block text-sm font-medium text-gray-700">Time</label>
-                        <input type="time" id="meeting-time" v-model="newMeeting.time" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                    </div>
-                    <div class="mb-4">
-                        <label for="meeting-type" class="block text-sm font-medium text-gray-700">Meeting Type</label>
-                        <select id="meeting-type" v-model="newMeeting.type" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
-                            <option value="In-person">In-person</option>
-                            <option value="Virtual">Virtual</option>
-                        </select>
-                    </div>
-                    <div class="mb-4">
-                        <label for="meeting-participants" class="block text-sm font-medium text-gray-700">Participants (comma-separated)</label>
-                        <input type="text" id="meeting-participants" v-model="newMeeting.participants" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                    </div>
-                    <div class="flex justify-end space-x-2">
-                        <button type="button" @click="showScheduleModal = false" class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                            Cancel
-                        </button>
-                        <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                            Schedule
-                        </button>
+
+                    <div v-else>
+                        <!-- Meeting Summary -->
+                        <div class="mb-4"><strong>Title:</strong> {{ meetingDetails.title }}</div>
+                        <div class="mb-4"><strong>Date:</strong> {{ meetingDetails.date }}</div>
+                        <div class="mb-4"><strong>Duration:</strong> {{ meetingDetails.duration }} minutes</div>
+                        <div class="mb-4"><strong>Google Meet URL:</strong> {{ meetingDetails.meetUrl }}</div>
+                        <button @click="saveMeeting" class="bg-green-500 text-white px-4 py-2 rounded-md">Save</button>
                     </div>
                 </form>
             </div>
@@ -109,51 +110,86 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+    import { ref, reactive, computed, onMounted } from 'vue'
+    import { loadGapiInsideDOM } from 'gapi-script'
+    import { initClient, createGoogleMeet, saveMeetingToDatabase } from '@/stores/meeting/meetingService'
 
-const showScheduleModal = ref(false)
-const newMeeting = ref({
-  title: '',
-  date: '',
-  time: '',
-  type: '',
-  participants: ''
-})
+    const showScheduleModal = ref(false)
+    const currentStep = ref(1)
+    const error = ref('');
+    const showForm = ref(false);
 
-const upcomingMeetings = ref([
-  { id: 1, title: 'Team Standup', date: '2023-06-15', time: '09:00', type: 'Virtual', participants: ['John Doe', 'Jane Smith', 'Bob Johnson'] },
-  { id: 2, title: 'Project Review', date: '2023-06-16', time: '14:00', type: 'In-person', participants: ['Alice Brown', 'Charlie Davis'] },
-  { id: 3, title: 'Client Meeting', date: '2023-06-17', time: '11:00', type: 'Virtual', participants: ['Eve Wilson', 'Frank Thomas', 'Grace Lee'] },
-])
+    const meetingDetails = reactive({
+        title: '',
+        date: '',
+        duration: '15',
+        meetUrl: ''
+    });
 
-const currentDate = new Date()
-const currentMonth = currentDate.getMonth()
-const currentYear = currentDate.getFullYear()
+    const openCreateForm = () => {
+        showForm.value = true;
+        currentStep.value = 1;
+    };
 
-const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate()
-const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay()
+    const nextStep = async () => {
+        if (currentStep.value === 1) {
+            try {
+                meetingDetails.meetUrl = await createGoogleMeet(meetingDetails);
+                currentStep.value = 2;
+            } catch (err) {
+                error.value = 'Failed to generate Google Meet URL. Please try again.';
+            }
+        }
+    };
 
-const calendarDays = computed(() => {
-  const days = []
-  for (let i = 0; i < firstDayOfMonth; i++) {
-    days.push({ date: '', meetings: [] })
-  }
-  for (let i = 1; i <= daysInMonth; i++) {
-    const date = `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`
-    const meetings = upcomingMeetings.value.filter(meeting => meeting.date === date)
-    days.push({ date: i, meetings })
-  }
-  return days
-})
+    const saveMeeting = async () => {
+        try {
+            await saveMeetingToDatabase(meetingDetails);
+            showForm.value = false;
+            resetMeetingDetails();
+            alert('Meeting saved successfully!');
+        } catch (err) {
+            error.value = 'Failed to save the meeting. Please try again.';
+        }
+    };
 
-const scheduleMeeting = () => {
-  const meeting = {
-    id: upcomingMeetings.value.length + 1,
-    ...newMeeting.value,
-    participants: newMeeting.value.participants.split(',').map(p => p.trim())
-  }
-  upcomingMeetings.value.push(meeting)
-  showScheduleModal.value = false
-  newMeeting.value = { title: '', date: '', time: '', type: '', participants: '' }
-}
+    const resetMeetingDetails = () => {
+        Object.assign(meetingDetails, {
+            title: '',
+            date: '',
+            duration: '15',
+            meetUrl: ''
+        });
+    };
+
+    onMounted(async () => {
+        try {
+            await loadGapiInsideDOM();
+            gapi.load('client:auth2', initClient);
+        } catch (err) {
+            console.error('Failed to load GAPI:', err);
+        }
+    });
+
+    const upcomingMeetings = ref([]);
+
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth();
+    const currentYear = currentDate.getFullYear();
+
+    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+
+    const calendarDays = computed(() => {
+        const days = [];
+        for (let i = 0; i < firstDayOfMonth; i++) {
+            days.push({ date: '', meetings: [] });
+        }
+        for (let i = 1; i <= daysInMonth; i++) {
+            const date = `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
+            const meetings = upcomingMeetings.value.filter(meeting => meeting.date === date);
+            days.push({ date: i, meetings });
+        }
+        return days;
+    });
 </script>

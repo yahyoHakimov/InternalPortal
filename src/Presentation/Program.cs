@@ -1,10 +1,19 @@
+
+using Application.Models.Announcements.Commands;
+using Application.Models.Employee.Commands;
 using Application.Services.Implementation.IEmployee;
-using Application.Services.Interface.Auth;
+using Application.Services.Implementation.MeetingService;
+using Application.Services.Interface.IAuth;
 using Application.Services.Interface.IEmployee;
+using Application.Services.Interface.IMeeting;
 using Domain.Entities.User;
-using Domain.Interfaces;
-using Infrastructure.Persistence;
-using Infrastructure.Repositories;
+using Infrastructure.DbConetxt;
+using Infrastructure.Repositories.Implementation.AnnouncementRepo;
+using Infrastructure.Repositories.Implementation.EmployeeRepo;
+using Infrastructure.Repositories.Implementation.MeetingRepo;
+using Infrastructure.Repositories.Interfaces.IAnnouncementRepo;
+using Infrastructure.Repositories.Interfaces.IEmployeeRepo;
+using Infrastructure.Repositories.Interfaces.IMeetingRepo;
 using Infrastructure.Services.Implementation.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -13,6 +22,15 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Register MediatR services
+// Register MediatR for Employee-related commands and queries
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateEmployeeCommand).Assembly));
+
+// Register MediatR for Announcement-related commands and queries
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateAnnouncementCommand).Assembly));
+
+
 
 // JWT Settings from configuration
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
@@ -73,8 +91,14 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Register application services for Dependency Injection
 builder.Services.AddScoped<IAuthService, AuthService>();
+
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+
+builder.Services.AddScoped<IMeetingService, MeetingService>();
+builder.Services.AddScoped<IMeetingRepository, MeetingRepository>();
+
+builder.Services.AddScoped<IAnnouncementRepository, AnnouncementRepository>();
 
 // Add controllers
 builder.Services.AddControllers();
