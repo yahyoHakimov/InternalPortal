@@ -1,5 +1,5 @@
 ﻿using Application.Models.Announcements.Commands;
-using Domain.Interfaces;
+using Infrastructure.Repositories.Interfaces.IAnnouncementRepo;
 using MediatR;
 using System;
 using System.Collections.Generic;

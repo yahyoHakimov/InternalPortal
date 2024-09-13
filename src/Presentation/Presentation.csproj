@@ -24,6 +24,7 @@
     <Folder Include="InternalPortalUI\src\components\Sidebar\" />
     <Folder Include="InternalPortalUI\src\stores\Auth\" />
     <Folder Include="InternalPortalUI\src\views\Auth\" />
+    <Folder Include="InternalPortalUI\src\views\Department\" />
     <Folder Include="InternalPortalUI\src\views\Requests\" />
     <Folder Include="InternalPortalUI\src\views\Feedback\" />
     <Folder Include="InternalPortalUI\src\views\Document\" />

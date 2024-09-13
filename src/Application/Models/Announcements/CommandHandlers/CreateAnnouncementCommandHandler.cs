@@ -1,6 +1,6 @@
 ﻿using Application.Models.Announcements.Commands;
 using Domain.Entities;
-using Domain.Interfaces;
+using Infrastructure.Repositories.Interfaces.IAnnouncementRepo;
 using MediatR;
 using System;
 using System.Threading;

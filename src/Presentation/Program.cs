@@ -8,10 +8,12 @@ using Application.Services.Interface.IEmployee;
 using Application.Services.Interface.IMeeting;
 using Domain.Entities.User;
 using Infrastructure.DbConetxt;
+using Infrastructure.Repositories.Implementation;
 using Infrastructure.Repositories.Implementation.AnnouncementRepo;
 using Infrastructure.Repositories.Implementation.EmployeeRepo;
 using Infrastructure.Repositories.Implementation.MeetingRepo;
 using Infrastructure.Repositories.Interfaces.IAnnouncementRepo;
+using Infrastructure.Repositories.Interfaces.IDepartmentRepo;
 using Infrastructure.Repositories.Interfaces.IEmployeeRepo;
 using Infrastructure.Repositories.Interfaces.IMeetingRepo;
 using Infrastructure.Services.Implementation.Auth;
@@ -23,6 +25,17 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+// Add DbContext with SQL Server
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
+// Add Identity with custom ApplicationUser and int as primary key
+builder.Services.AddIdentity<ApplicationUser, IdentityRole<int>>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+
 // Register MediatR services
 // Register MediatR for Employee-related commands and queries
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateEmployeeCommand).Assembly));
@@ -32,14 +45,25 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Creat
 
 
 
+
+// Register application services for Dependency Injection
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+
+builder.Services.AddScoped<IMeetingService, MeetingService>();
+builder.Services.AddScoped<IMeetingRepository, MeetingRepository>();
+
+builder.Services.AddScoped<IAnnouncementRepository, AnnouncementRepository>();
+
+builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+
+
+
 // JWT Settings from configuration
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 var key = Encoding.ASCII.GetBytes(jwtSettings["SecretKey"]);
-
-// Add Identity with custom ApplicationUser and int as primary key
-builder.Services.AddIdentity<ApplicationUser, IdentityRole<int>>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
 
 // Configure JWT Authentication
 builder.Services.AddAuthentication(options =>
@@ -83,22 +107,6 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader();
     });
 });
-
-// Add DbContext with SQL Server
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-
-// Register application services for Dependency Injection
-builder.Services.AddScoped<IAuthService, AuthService>();
-
-builder.Services.AddScoped<IEmployeeService, EmployeeService>();
-builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-
-builder.Services.AddScoped<IMeetingService, MeetingService>();
-builder.Services.AddScoped<IMeetingRepository, MeetingRepository>();
-
-builder.Services.AddScoped<IAnnouncementRepository, AnnouncementRepository>();
 
 // Add controllers
 builder.Services.AddControllers();

@@ -21,10 +21,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\RolePermission\CommandHandlers\" />
-    <Folder Include="Models\RolePermission\Commands\" />
-    <Folder Include="Models\RolePermission\Queries\" />
-    <Folder Include="Models\RolePermission\QueriyHandlers\" />
+    <Folder Include="Models\ApplicationUserModel\Commands\" />
+    <Folder Include="Models\ApplicationUserModel\CommandHandlers\" />
     <Folder Include="Models\Request\CommandHandlers\" />
     <Folder Include="Models\Request\Commands\" />
     <Folder Include="Models\Request\Queries\" />

@@ -15,6 +15,7 @@ namespace Infrastructure.DbConetxt
 
         // Define DbSet for each entity
         public DbSet<EmployeeModel> Employees { get; set; }
+        public DbSet<DepartmentModel> Departments { get; set; }
         public DbSet<KPI> KPIs { get; set; }
         public DbSet<Request> Requests { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
@@ -86,6 +87,16 @@ namespace Infrastructure.DbConetxt
                 .WithMany()
                 .HasForeignKey(a => a.PostedByEmployeeId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<DepartmentModel>()
+            .HasMany(d => d.Employees)
+            .WithOne(e => e.Departments)
+            .HasForeignKey(e => e.DepartmentId);
+
+            modelBuilder.Entity<DepartmentModel>()
+                .HasOne(d => d.Director)
+                .WithOne()
+                .HasForeignKey<EmployeeModel>(e => e.DepartmentId);
 
             // Configure other relationships if needed
 

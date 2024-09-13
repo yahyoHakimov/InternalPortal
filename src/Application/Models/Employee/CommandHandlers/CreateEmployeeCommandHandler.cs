@@ -26,11 +26,11 @@ namespace Application.Models.Employee.CommandHandlers
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 Email = request.Email,
-                Role = request.Role,
-                Department = request.Department,
                 JobTitle = request.JobTitle,
                 HireDate = request.HireDate,
-                ApplicationUserId = request.ApplicationUserId
+                ApplicationUserId = request.ApplicationUserId,
+                DepartmentId = request.DepartmentId,
+                RoleId = request.RoleId  // Set role here
             };
 
             await _employeeRepository.AddEmployeeAsync(employee);

@@ -28,8 +28,8 @@ namespace Application.Models.Employee.CommandHandlers
             employee.FirstName = request.FirstName;
             employee.LastName = request.LastName;
             employee.Email = request.Email;
-            employee.Role = request.Role;
-            employee.Department = request.Department;
+            employee.RoleId = request.RoleId;
+            employee.DepartmentId = request.DepartmentId;
             employee.JobTitle = request.JobTitle;
             employee.HireDate = request.HireDate;
             employee.ApplicationUserId = request.ApplicationUserId;
