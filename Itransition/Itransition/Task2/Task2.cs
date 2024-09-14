@@ -1,4 +1,4 @@
-﻿namespace Itransition
+﻿namespace Itransition.Task2
 {
     using System;
     using System.IO;
@@ -8,7 +8,7 @@
 
     class Program
     {
-        static void Main(string[] args)
+        /*static void Main(string[] args)
         {
             // Path to the folder with the 256 binary files
             string folderPath = @"D:\Itransition\extracted"; // Update this path to your folder
@@ -68,7 +68,7 @@
             // Output the final hash as a 64-character hexadecimal string
             string finalHashString = BitConverter.ToString(finalHash).Replace("-", "").ToLower();
             Console.WriteLine($"Final SHA3-256: {finalHashString}");
-        }
+        }*/
     }
 
 }
