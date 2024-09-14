@@ -17,7 +17,7 @@
                      :alt="employee.firstName + ' ' + employee.lastName" />
                 <div class="text-center">
                     <h3 class="text-lg font-semibold text-gray-900">{{ employee.firstName }} {{ employee.lastName }}</h3>
-                    <p class="text-sm text-gray-500">{{ employee.department }} - {{ employee.role }}</p>
+                    <p class="text-sm text-gray-500">{{ employee.department.departmentName }} - {{ employee.role }}</p>
                     <p class="text-sm text-gray-500">{{ employee.jobTitle }}</p>
                     <p class="text-sm text-gray-500">Application User: {{ employee.applicationUser.email }}</p>
                 </div>
@@ -64,21 +64,20 @@
                                required
                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" />
                     </div>
+                    <!-- Dynamically Fetch Departments -->
                     <div class="mb-4">
                         <label for="department" class="block text-sm font-medium text-gray-700">Department</label>
-                        <input type="text"
-                               id="department"
-                               v-model="newEmployee.department"
-                               required
-                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" />
+                        <select v-model="newEmployee.departmentId" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                            <option v-for="department in staticDirectors" :key="department.departmentId" :value="department.departmentId">
+                                {{ department.firstName }}{{ department.lastName }}
+                            </option>
+                        </select>
                     </div>
                     <div class="mb-4">
                         <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
-                        <input type="text"
-                               id="role"
-                               v-model="newEmployee.role"
-                               required
-                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" />
+                        <select id="role" v-model="newEmployee.roleId" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                            <option v-for="role in staticRoles" :key="role.id" :value="role.id">{{ role.name }}</option>
+                        </select>
                     </div>
                     <div class="mb-4">
                         <label for="jobTitle" class="block text-sm font-medium text-gray-700">Job Title</label>
@@ -95,20 +94,6 @@
                                v-model="newEmployee.hireDate"
                                required
                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" />
-                    </div>
-                    <div class="mb-4">
-                        <label for="applicationUserId" class="block text-sm font-medium text-gray-700">Application User</label>
-                        <select v-model="newEmployee.applicationUserId" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                            <option v-for="user in users" :key="user.id" :value="user.id">
-                                {{ user.email }}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="mb-4">
-                        <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
-                        <select id="role" v-model="newEmployee.roleId" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
-                            <option v-for="role in roles" :key="role.id" :value="role.id">{{ role.name }}</option>
-                        </select>
                     </div>
                     <div class="flex justify-end space-x-2">
                         <button type="button"
@@ -137,8 +122,8 @@
                     <div>
                         <h4 class="text-xl font-semibold text-gray-900">{{ selectedEmployee.firstName }} {{ selectedEmployee.lastName }}</h4>
                         <p class="text-sm text-gray-500">Email: {{ selectedEmployee.email }}</p>
-                        <p class="text-sm text-gray-500">Department: {{ selectedEmployee.department }}</p>
-                        <p class="text-sm text-gray-500">Role: {{ employee.firstName }} {{ employee.lastName }} - {{ employee.role.name }}</p>
+                        <p class="text-sm text-gray-500">Department: {{ selectedEmployee.department.departmentName }}</p>
+                        <p class="text-sm text-gray-500">Role: {{ selectedEmployee.role.name }}</p>
                         <p class="text-sm text-gray-500">Job Title: {{ selectedEmployee.jobTitle }}</p>
                         <p class="text-sm text-gray-500">Hire Date: {{ selectedEmployee.hireDate }}</p>
                         <p class="text-sm text-gray-500">Application User: {{ selectedEmployee.applicationUser.email }}</p>
@@ -167,22 +152,35 @@
     const employees = ref([])
     const users = ref([]) // To hold Application Users for the dropdown
     const roles = ref([])
+    const departments = ref([]) // List of departments from server
     const showAddEmployeeModal = ref(false)
     const showProfileModal = ref(false)
     const newEmployee = ref({
         firstName: '',
         lastName: '',
         email: '',
-        department: '',
-        role: '',
+        departmentId: '', // Now selecting department by ID
+        roleId: '',
         jobTitle: '',
         hireDate: '',
         applicationUserId: '',
     })
+    const staticDirectors = ref([ // List of static directors for now
+    { employeeId: 1, firstName: 'John', lastName: 'Doe' },
+    { employeeId: 2, firstName: 'Jane', lastName: 'Smith' },
+    { employeeId: 3, firstName: 'Alice', lastName: 'Johnson' },
+]);
+
+const staticRoles = ref([ // List of static directors for now
+    { employeeId: 1, name: 'Admin' },
+    { employeeId: 1, name: 'manager' },
+    { employeeId: 1, name: 'HR' }
+]);
+
 
     const selectedEmployee = ref({})
 
-    // Fetch employees and users from the store and server
+    // Fetch employees, departments, and roles from the store and server
     onMounted(async () => {
         await store.fetchItems('employees')
         employees.value = store.items.employees
@@ -191,7 +189,10 @@
         await store.fetchItems('users')
         users.value = store.items.users
 
-        await store.fetchItems("roles");
+        await store.fetchItems('departments')
+        departments.value = store.items.departments
+
+        await store.fetchItems("roles")
         roles.value = store.items.roles
     })
 
@@ -220,6 +221,6 @@
         await store.addItem('employees', employee)
         employees.value = store.items.employees // Update the local state
         showAddEmployeeModal.value = false
-        newEmployee.value = { firstName: '', lastName: '', email: '', department: '', role: '', jobTitle: '', hireDate: '', applicationUserId: '' }
+        newEmployee.value = { firstName: '', lastName: '', email: '', departmentId: '', roleId: '', jobTitle: '', hireDate: '', applicationUserId: '' }
     }
 </script>

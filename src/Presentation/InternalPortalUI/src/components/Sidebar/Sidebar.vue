@@ -43,6 +43,7 @@ const collapseSidebar = () => {
 const navItems = [
   { icon: Home, label: 'Dashboard', route: '/' },
   { icon: Users, label: 'Employee', route: '/employee' },
+  { icon: Users, label: 'Department', route: '/department' },
   { icon: BarChart2, label: 'KPI', route: '/kpi' },
   { icon: Megaphone, label: 'Announcements', route: '/announcements' },
   { icon: User, label: 'Profile', route: '/profile' },

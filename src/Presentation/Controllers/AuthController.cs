@@ -53,6 +53,8 @@ namespace Presentation.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // This will return the authenticated user's ID
             return Ok(new { userId });
         }
+
+        
     }
 
 }

@@ -1,5 +1,5 @@
 <template>
-    <div class="flex h-screen bg-gray-100">
+    <div class="flex h-screen w-full bg-gray-100">
         <!-- Sidebar and Main Content when Authenticated -->
         <template v-if="isAuthenticated">
             <Sidebar />
@@ -13,17 +13,18 @@
             </main>
         </template>
 
-        <!-- Public Routes without Sidebar when Not Authenticated -->
+        <!-- When Not Authenticated -->
         <template v-else>
-            <router-view></router-view>
+            <!-- Full screen for public or unauthorized pages -->
+            <router-view />
         </template>
     </div>
 </template>
 
 <script setup>
     import { useAuthStore } from './stores/Auth/auth.js'
-    import { computed, onMounted  } from 'vue'
-    import { useRouter } from 'vue-router' // Import Vue Router for navigation
+    import { computed, onMounted } from 'vue'
+    import { useRouter } from 'vue-router'
 
     import Sidebar from '@/components/Sidebar/Sidebar.vue'
     import TopNav from '@/components/Nav/TopNav.vue'
@@ -42,7 +43,8 @@
         authStore.logout(router)
     }
 
-    /*onMounted(() => {
-    authStore.checkAuth()} // Ensure this checks the token on page load
-    })*/
+    // Ensure this checks the token on page load
+    onMounted(() => {
+        authStore.checkAuth()
+    })
 </script>

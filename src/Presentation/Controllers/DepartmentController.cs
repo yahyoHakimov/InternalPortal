@@ -28,23 +28,16 @@ namespace Presentation.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             await _departmentRepository.AddDepartmentAsync(department);
-            await _departmentRepository.AddDepartmentAsync(department);
             return Ok(department);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateDepartment(int id, [FromBody] DepartmentModel department)
         {
-            if (id != department.DepartmentId)
-            {
-                return BadRequest("Department ID mismatch");
-            }
+            if (id != department.DepartmentId) return BadRequest("Department ID mismatch");
 
             var existingDepartment = await _departmentRepository.GetDepartmentByIdAsync(id);
-            if (existingDepartment == null)
-            {
-                return NotFound();
-            }
+            if (existingDepartment == null) return NotFound();
 
             await _departmentRepository.UpdateDepartmentAsync(department);
             return Ok(department);
@@ -54,14 +47,10 @@ namespace Presentation.Controllers
         public async Task<IActionResult> DeleteDepartment(int id)
         {
             var department = await _departmentRepository.GetDepartmentByIdAsync(id);
-            if (department == null)
-            {
-                return NotFound();
-            }
+            if (department == null) return NotFound();
 
             await _departmentRepository.DeleteDepartmentAsync(id);
             return Ok();
         }
     }
-
 }

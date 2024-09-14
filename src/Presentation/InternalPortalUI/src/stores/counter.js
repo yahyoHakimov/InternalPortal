@@ -17,9 +17,8 @@ export const useAppStore = defineStore('app', {
             feedback: [],
             kpi: [],
             profile: [],
-            users: [], 
-            departments: [],
-            roles: []
+            users: [],
+            departments: []
         },
     }),
     actions: {
@@ -36,7 +35,6 @@ export const useAppStore = defineStore('app', {
                 console.error(`Error fetching ${entityType}:`, error);
             }
         },
-
 
         // Generalized add function for any entity type
         async addItem(entityType, item) {
